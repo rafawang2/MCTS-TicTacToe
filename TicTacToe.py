@@ -2,6 +2,7 @@ from GameUtils import *
 from Players.Human import Human
 from Players.AlphaBeta import AlphaBetaPlayer
 from Players.RandomBot import RandomBot
+from Players.MCTS import MCTSPlayer
 
 class TicTacToe():
     def __init__(self, state:STATE):
@@ -19,10 +20,12 @@ class TicTacToe():
                 r, c = p1.get_move(self.game_state.board, self.game_state.current_player)
             else:
                 r, c = p2.get_move(self.game_state.board, self.game_state.current_player)
-            make_move(self.game_state.board, r, c, self.game_state.current_player)
-            self.game_state.current_player*=-1
+            if is_ValidMove(self.game_state.board, r, c):
+                make_move(self.game_state.board, r, c, self.game_state.current_player)
+                self.game_state.current_player*=-1
+            else:
+                print(ANSI_string("Invalid move","red"))
             winner = GetWinner(self.game_state.board)
-            print(winner)
 
         win_msg = {
             -1: "(X) wins!",
@@ -45,4 +48,8 @@ if __name__ == '__main__':
                          state=game_state)
     p4 = AlphaBetaPlayer(symbol=1,
                          state=game_state)
-    game.play(p1, p4)
+    p5 = MCTSPlayer(symbol=-1,
+                    state=game_state)
+    p6 = MCTSPlayer(symbol=1,
+                    state=game_state)
+    game.play(p5, p6)
