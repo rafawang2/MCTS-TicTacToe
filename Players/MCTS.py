@@ -2,7 +2,7 @@ from GameUtils import *
 import math
 import random
 from copy import deepcopy
-from Players.RandomBot import RandomBot
+from Players.RandomBot import GreedyBot
 import time
 
 class MCTSNode:
@@ -23,7 +23,7 @@ class MCTSPlayer:
         self.exploration_weight = exploration_weight
         self.root_state = state
         self.symbol = symbol
-        self.select_meth_bot = RandomBot()
+        self.select_meth_bot = GreedyBot()
 
     def get_move(self, board, player, verbose = True):
         current_time = time.time()
@@ -37,17 +37,17 @@ class MCTSPlayer:
         self.root_state.current_player = player
 
         if progress < 0.45:
-            self.num_simulations = 1000
+            self.num_simulations = 1500
         elif progress < 0.6:
-            self.num_simulations = 2000
+            self.num_simulations = 3000
         elif progress < 0.7:
-            self.num_simulations = 3000
+            self.num_simulations = 4500
         elif progress < 0.8:
-            self.num_simulations = 4000
+            self.num_simulations = 6000
         elif progress < 0.9:
-            self.num_simulations = 3000
+            self.num_simulations = 4500
         else:  # 終盤
-            self.num_simulations = 1000
+            self.num_simulations = 1500
 
         if verbose:
             print(f"Game progress: {progress}")
@@ -164,8 +164,6 @@ class MCTSPlayer:
         else:
             return 0  # 平手
 
-
-    # 回傳模擬結果
     def backpropagate(self, node:MCTSNode, result):
         """
         Backpropagates the simulation result through the tree.
@@ -183,11 +181,7 @@ class MCTSPlayer:
             node.visits += 1
             if node.parent: # Non-root node
                 if node.player == self.symbol:
-                    # Our player's perspective
                     node.score += result
-                else:
-                    # Opponent's perspective (invert result)
-                    node.score -= result
             else:  # Root node
                 node.score += result
 
