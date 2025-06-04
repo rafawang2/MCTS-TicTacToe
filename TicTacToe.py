@@ -1,7 +1,7 @@
 from GameUtils import *
 from Players.Human import Human
 from Players.AlphaBeta import AlphaBetaPlayer
-from Players.RandomBot import RandomBot
+from Players.RandomBot import RandomBot, GreedyBot
 from Players.MCTS import MCTSPlayer
 
 class TicTacToe():
@@ -52,4 +52,6 @@ if __name__ == '__main__':
                     state=game_state)
     p6 = MCTSPlayer(symbol=1,
                     state=game_state)
-    game.play(p5, p6)
+
+    p7 = GreedyBot()
+    game.play(p3, p6)
